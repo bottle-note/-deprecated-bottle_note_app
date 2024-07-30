@@ -11,13 +11,20 @@ class WebView extends StatefulWidget {
 }
 
 class _WebViewState extends State<WebView> {
-  WebViewController controller = WebViewController()..loadRequest(uri);
+  WebViewController controller = WebViewController()
+    ..loadRequest(uri)
+    ..setJavaScriptMode(JavaScriptMode.unrestricted); // 자바스크립트 허용
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: WebViewWidget(
-        controller: controller,
+      backgroundColor: const Color(0xFFE58257),
+      body: SafeArea(
+        top: true,
+        bottom: true,
+        child: WebViewWidget(
+          controller: controller,
+        ),
       ),
     );
   }
