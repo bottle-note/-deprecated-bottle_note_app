@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bottle_note_app/web_view/custom_vertical_gesture_recognizer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class BottleNoteWebView extends StatefulWidget {
@@ -17,12 +18,26 @@ class _WebViewState extends State<BottleNoteWebView>
   late WebViewController controller;
   late Future<String> webviewDeviceInfoUrl;
 
+  // MethodChannel
+  static const platform = MethodChannel('intent.channel');
+
   @override
   void initState() {
     super.initState();
     webviewDeviceInfoUrl =
         Future.value("https://bottle-note-deploy.vercel.app/");
   }
+
+/*
+ navigationDelegate: (NavigationRequest request) {
+            if (request.url.startsWith('intent://')) {
+              handleIntentURI(request.url);
+              return NavigationDecision
+                  .prevent; // 네이티브에서 처리하므로 WebView에서는 로드하지 않음
+            }
+            return NavigationDecision.navigate;
+          },
+ */
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +46,9 @@ class _WebViewState extends State<BottleNoteWebView>
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           controller = WebViewController()
+            ..setNavigationDelegate(
+                // TODO: 여기서 부터 이어서 작업
+                )
             ..setBackgroundColor(Colors.white)
             ..setJavaScriptMode(JavaScriptMode.unrestricted)
             ..loadRequest(Uri.parse(snapshot.data!));
@@ -39,12 +57,23 @@ class _WebViewState extends State<BottleNoteWebView>
               ? androidBackHandling(context)
               : iosBackHandling(context);
         } else {
-          return Scaffold(
+          return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
       },
     );
+  }
+
+  // Intent URI 처리 로직
+  Future<void> handleIntentURI(String url) async {
+    try {
+      final result =
+          await platform.invokeMapMethod('handleIntentURI', {'url': url});
+      print('intetn URI 처리 성공: $result');
+    } catch (e) {
+      print('intent URI 처리 실패: $e');
+    }
   }
 
   Future<bool> goBack(BuildContext context) async {
