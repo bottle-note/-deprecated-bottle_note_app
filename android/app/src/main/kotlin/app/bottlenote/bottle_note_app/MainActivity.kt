@@ -1,7 +1,11 @@
 package app.bottlenote.bottle_note_app
 
+import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
+import android.content.Intent
+import java.net.URISyntaxException
+import android.util.Log
 
 class MainActivity: FlutterActivity() {
        private val CHANNEL = "intent.channel"

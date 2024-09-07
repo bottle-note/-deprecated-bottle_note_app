@@ -24,20 +24,10 @@ class _WebViewState extends State<BottleNoteWebView>
   @override
   void initState() {
     super.initState();
+    print('build !!!');
     webviewDeviceInfoUrl =
         Future.value("https://bottle-note-deploy.vercel.app/");
   }
-
-/*
- navigationDelegate: (NavigationRequest request) {
-            if (request.url.startsWith('intent://')) {
-              handleIntentURI(request.url);
-              return NavigationDecision
-                  .prevent; // 네이티브에서 처리하므로 WebView에서는 로드하지 않음
-            }
-            return NavigationDecision.navigate;
-          },
- */
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +36,17 @@ class _WebViewState extends State<BottleNoteWebView>
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           controller = WebViewController()
-            ..setNavigationDelegate(
-                // TODO: 여기서 부터 이어서 작업
-                )
+            ..setNavigationDelegate(NavigationDelegate(
+                onNavigationRequest: (NavigationRequest request) async {
+              print('navigation !!!');
+
+              if (request.url.startsWith('intent')) {
+                print('here?');
+                handleIntentURI(request.url);
+                return NavigationDecision.prevent;
+              }
+              return NavigationDecision.navigate;
+            }))
             ..setBackgroundColor(Colors.white)
             ..setJavaScriptMode(JavaScriptMode.unrestricted)
             ..loadRequest(Uri.parse(snapshot.data!));
