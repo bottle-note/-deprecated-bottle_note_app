@@ -41,7 +41,6 @@ class _WebViewState extends State<BottleNoteWebView>
               print('navigation !!!');
 
               if (request.url.startsWith('intent')) {
-                print('here?');
                 handleIntentURI(request.url);
                 return NavigationDecision.prevent;
               }
