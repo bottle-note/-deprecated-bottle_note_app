@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
-    home: const BottleNoteWebView(),
+    home: const SafeArea(bottom: false, child: BottleNoteWebView()),
     onGenerateRoute: (settings) {
       if (Platform.isIOS) {
         return CupertinoPageRoute(builder: (_) => const BottleNoteWebView());

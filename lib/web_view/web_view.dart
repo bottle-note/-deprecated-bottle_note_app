@@ -1,90 +1,52 @@
 import 'dart:io';
 
-import 'package:bottle_note_app/web_view/custom_vertical_gesture_recognizer.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter/services.dart'; // BackButtonListener를 사용하기 위해 추가
 
 class BottleNoteWebView extends StatefulWidget {
   const BottleNoteWebView({super.key});
 
   @override
-  State<BottleNoteWebView> createState() => _WebViewState();
+  State<BottleNoteWebView> createState() => _BottleNoteWebViewState();
 }
 
-class _WebViewState extends State<BottleNoteWebView>
-    with WidgetsBindingObserver {
-  late WebViewController controller;
-  late Future<String> webviewDeviceInfoUrl;
+class _BottleNoteWebViewState extends State<BottleNoteWebView> {
+  late final WebViewController _controller;
+  final String _initialUrl = "https://bottle-note-deploy.vercel.app/";
 
   @override
   void initState() {
     super.initState();
-    webviewDeviceInfoUrl =
-        Future.value("https://bottle-note-deploy.vercel.app/");
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(_initialUrl));
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-      future: webviewDeviceInfoUrl,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          controller = WebViewController()
-            ..setBackgroundColor(Colors.white)
-            ..setJavaScriptMode(JavaScriptMode.unrestricted)
-            ..loadRequest(Uri.parse(snapshot.data!));
+    Widget webView = WebViewWidget(controller: _controller);
 
-          return Platform.isAndroid
-              ? androidBackHandling(context)
-              : iosBackHandling(context);
-        } else {
-          return Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
-      },
-    );
-  }
-
-  Future<bool> goBack(BuildContext context) async {
-    if (await controller.canGoBack()) {
-      controller.goBack();
-      return Future.value(false);
+    if (Platform.isAndroid) {
+      // 안드로이드: 하드웨어 뒤로 가기 버튼 처리
+      return BackButtonListener(
+        onBackButtonPressed: () async {
+          if (await _controller.canGoBack()) {
+            _controller.goBack();
+            return true; // 뒤로 가기 버튼을 처리했음을 알림
+          } else {
+            return false; // 앱 종료 허용
+          }
+        },
+        child: Scaffold(
+          body: webView,
+        ),
+      );
     } else {
-      return Future.value(true);
+      // iOS: 웹사이트 내부에서 뒤로 가기 버튼 구현
+      return Scaffold(
+        body: webView,
+      );
     }
-  }
-
-  Widget androidBackHandling(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => goBack(context),
-      child: Scaffold(
-        body: WebViewWidget(
-          controller: controller,
-        ),
-      ),
-    );
-  }
-
-  Widget iosBackHandling(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque, // 터치 이벤트가 WebView로 전달되도록 설정
-      onVerticalDragUpdate: (details) {},
-      onHorizontalDragUpdate: (details) {
-        if (details.delta.dx > 10) {
-          debugPrint("goBack");
-          goBack(context);
-        }
-      },
-      child: SafeArea(
-        child: WebViewWidget(
-          controller: controller,
-          gestureRecognizers: {
-            Factory(() => CustomVerticalGestureRecognizer()),
-          },
-        ),
-      ),
-    );
   }
 }
