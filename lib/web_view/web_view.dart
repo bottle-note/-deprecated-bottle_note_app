@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:flutter/services.dart'; // BackButtonListener를 사용하기 위해 추가
 
 class BottleNoteWebView extends StatefulWidget {
   const BottleNoteWebView({super.key});
