@@ -27,19 +27,8 @@ class _BottleNoteWebViewState extends State<BottleNoteWebView> {
     Widget webView = WebViewWidget(controller: _controller);
 
     if (Platform.isAndroid) {
-      // 안드로이드: 하드웨어 뒤로 가기 버튼 처리
-      return BackButtonListener(
-        onBackButtonPressed: () async {
-          if (await _controller.canGoBack()) {
-            _controller.goBack();
-            return true; // 뒤로 가기 버튼을 처리했음을 알림
-          } else {
-            return false; // 앱 종료 허용
-          }
-        },
-        child: Scaffold(
-          body: webView,
-        ),
+      return Scaffold(
+        body: webView,
       );
     } else {
       // iOS: 웹사이트 내부에서 뒤로 가기 버튼 구현
