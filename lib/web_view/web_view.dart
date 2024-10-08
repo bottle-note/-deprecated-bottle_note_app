@@ -30,6 +30,24 @@ class _BottleNoteWebViewState extends State<BottleNoteWebView> {
       ..loadRequest(Uri.parse(_initialUrl));
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        _myCondition();
+      },
+
+      child: SafeArea(
+        child: Scaffold(
+          body: WebViewWidget(
+            controller: _controller,
+          ),
+        ),
+      ),
+    );
+  }
+
   NavigationDelegate navigationDelegate() {
     return NavigationDelegate(
       // 네비게이션 이벤트를 처리하는 콜백을 설정합니다.
@@ -50,18 +68,6 @@ class _BottleNoteWebViewState extends State<BottleNoteWebView> {
       },
     );
   }
-
-/*
-  @override
-  Widget build(BuildContext context) {
-    Widget webView = WebViewWidget(controller: _controller);
-    return SafeArea(
-      bottom: false,
-      child: Scaffold(
-        body: webView,
-      ),
-    );
-  }*/
 
   _myCondition() async {
     if (await _controller.canGoBack()) {
@@ -93,19 +99,4 @@ class _BottleNoteWebViewState extends State<BottleNoteWebView> {
     return true;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return _myCondition();
-      },
-      child: SafeArea(
-        child: Scaffold(
-          body: WebViewWidget(
-            controller: _controller,
-          ),
-        ),
-      ),
-    );
-  }
 }
