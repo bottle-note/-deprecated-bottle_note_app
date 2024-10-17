@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class BottleNoteWebView extends StatefulWidget {
@@ -19,6 +20,7 @@ class _BottleNoteWebViewState extends State<BottleNoteWebView> {
   @override
   void initState() {
     super.initState();
+    _permissionWithNotification();
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00e58257))
@@ -66,6 +68,7 @@ class _BottleNoteWebViewState extends State<BottleNoteWebView> {
   }
 
   _myCondition() async {
+    // 안드로이드 뒤로가기 버튼 동작 제어
     if (await _controller.canGoBack()) {
       //_controller 에서 뒤로 갈 곳이 있는지 확인합니다. bool형태로 나옵니다
       _controller
@@ -93,5 +96,13 @@ class _BottleNoteWebViewState extends State<BottleNoteWebView> {
       }
     }
     return true;
+  }
+
+  _permissionWithNotification() async {
+    //푸시 알림 권한 설정.
+    if (await Permission.notification.isDenied &&
+        !await Permission.notification.isPermanentlyDenied) {
+      await [Permission.notification].request();
+    }
   }
 }

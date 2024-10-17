@@ -68,6 +68,8 @@ PODS:
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
+  - permission_handler_apple (9.3.0):
+    - Flutter
   - PromisesObjC (2.4.0)
   - shared_preferences_foundation (0.0.1):
     - Flutter
@@ -82,6 +84,7 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
@@ -108,6 +111,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   webview_flutter_wkwebview:
@@ -127,6 +132,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
+  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   webview_flutter_wkwebview: 0982481e3d9c78fd5c6f62a002fcd24fc791f1e4

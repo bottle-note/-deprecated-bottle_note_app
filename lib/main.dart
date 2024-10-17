@@ -22,8 +22,6 @@ void main() async {
 
   String? _fcmToken = await FirebaseMessaging.instance.getToken();
   print('FCM Token: $_fcmToken');
-  print('FCM Token: $_fcmToken');
-  print('FCM Token: $_fcmToken');
 
   // 앱을 실행합니다.
   runApp(
